@@ -1,12 +1,10 @@
-body{
-    margin: 0;
-}
 
-#content{
+
+#webgl{
     position: absolute;
     width: 80%;
     height: 100%;
-    background-color: grey;
+    //background-color: grey;
 
 }
 
@@ -15,5 +13,5 @@ body{
     left: 80%;
     width: 20%;
     height: 100%;
-    background-color: blue;
+    //background-color: blue;
 }
