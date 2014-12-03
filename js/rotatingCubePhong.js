@@ -3,7 +3,6 @@
         camera = null,
         cube = null;
 
-
     var width = $(document.getElementById("webgl") ).width();
     var height = $(document.getElementById("webgl") ).height();
 
@@ -63,7 +62,7 @@
 
             // Create the cube geometry
             var geometry = new THREE.BoxGeometry(2, 2, 2);
-            
+
             // And put the geometry and material together into a mesh
             cube = new THREE.Mesh(geometry, material);
 
@@ -75,8 +74,6 @@
 
             // Finally, add the mesh to our scene
             scene.add( cube );
-
-
 
             // Run the run loop
             run();
