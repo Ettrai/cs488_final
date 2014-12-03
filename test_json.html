@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+
+    <body>
+        <p id="x">X Value : <span id="xValue">Nothing</span></p>
+        <p id="y">Y Value : <span id="yValue">Nothing</span></p>
+        <p id="z">Z Value : <span id="zValue">Nothing</span></p>
+
+    </body>
+    <script>
+        var data; // a global
+
+        setInterval(function(){ d3.json("http://10.110.218.199:8080/", function(error, json) {
+            if (error) return console.warn(error);
+            data = json.Values;
+
+            console.log(data.x_value);
+
+            d3.select("#xValue").text(data.x_value);
+            d3.select("#yValue").text(data.y_value);
+            d3.select("#zValue").text(data.z_value);
+
+
+        }); }, 20);
+
+    </script>
+
+</html>
