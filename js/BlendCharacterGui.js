@@ -1,22 +1,26 @@
 /**
  * @author Michael Guerrero / http://realitymeltdown.com
  */
+var deviceControllerActivated;
+var controls;
 
 function BlendCharacterGui(animations) {
 
-	var controls = {
+	controls = {
 
 		gui: null,
 		"Lock Camera": false,
 		"Show Model": true,
 		"Show Skeleton": false,
 		"Speed": 1.0,
+		"Device Controller": false,
 		//"Step Size": 0.016,
 		//"Crossfade Time": 3.5,
-		"Left": 0.5,
-		"Right": 0.5,
-		"Forward": 3,
-		"Backward": 0
+		"Left": 1.0,
+		"Right": 1.0,
+		"Forward": 3.0,
+		"Backward": 1.0,
+		"IP": '1.2.3.4'
 
 	};
 
@@ -61,6 +65,9 @@ function BlendCharacterGui(animations) {
 
 		settings.add( controls, "Lock Camera" ).onChange( controls.lockCameraChanged );
 		settings.add( controls, "Show Model" ).onChange( controls.showModelChanged );
+		settings.add( controls, "IP");
+		settings.add( controls, "Device Controller" ).onChange( deviceControllerChanged );
+
 
 
 		// These controls execute functions
@@ -71,8 +78,12 @@ function BlendCharacterGui(animations) {
 		//playback.add( controls, "walk to run" );
 		//playback.add( controls, "warp walk to run" );
 
-		blending.add( controls, "Left", 0, 1, 0.01).listen().onChange( controls.weight );
-		blending.add( controls, "Right", 0, 1, 0.01).listen().onChange( controls.weight );
+		blending.add( controls, "Left", 0, 3, 0.001).listen().onChange( function() {
+			controls.weight("left")
+		} );
+		blending.add( controls, "Right", 0, 3, 0.001).listen().onChange( function() {
+			controls.weight("right")
+		} );
 		blending.add( controls, "Forward", 0, 3, 0.01).listen().onChange( function() {
 			controls.weight("forward")
 		} );
@@ -85,7 +96,7 @@ function BlendCharacterGui(animations) {
 		playback.open();
 		blending.open();
 
-	}
+	};
 
 	var getAnimationData = function() {
 
@@ -100,79 +111,87 @@ function BlendCharacterGui(animations) {
 			}
 
 
+		};
 	};
-}
 
-controls.start = function() {
+	controls.start = function() {
 
-	var startEvent = new CustomEvent( 'start-animation', getAnimationData() );
-	window.dispatchEvent(startEvent);
+		var startEvent = new CustomEvent( 'start-animation', getAnimationData() );
+		window.dispatchEvent(startEvent);
 
-};
+	};
 
-controls.stop = function() {
+	controls.stop = function() {
 
-	var stopEvent = new CustomEvent( 'stop-animation' );
-	window.dispatchEvent( stopEvent );
+		var stopEvent = new CustomEvent( 'stop-animation' );
+		window.dispatchEvent( stopEvent );
 
-};
+	};
 
-controls.pause = function() {
+	controls.pause = function() {
 
-	var pauseEvent = new CustomEvent( 'pause-animation' );
-	window.dispatchEvent( pauseEvent );
+		var pauseEvent = new CustomEvent( 'pause-animation' );
+		window.dispatchEvent( pauseEvent );
 
-};
+	};
 
-controls.step = function() {
+	controls.step = function() {
 
-	var stepData = { detail: { stepSize: controls['Step Size'] } };
-	window.dispatchEvent( new CustomEvent('step-animation', stepData ));
+		var stepData = { detail: { stepSize: controls['Step Size'] } };
+		window.dispatchEvent( new CustomEvent('step-animation', stepData ));
 
-};
+	};
 
-controls.weight = function(invoker) {
+	controls.weight = function(invoker) {
 
-	// renormalize
-	var sum = controls['Left'] + controls['Right'];
-	controls['Left'] /= sum;
-	controls['Right'] /= sum;
+		//// renormalize
+		//var sum = controls['Left'] + controls['Right'];
+		//controls['Left'] /= sum;
+		//controls['Right'] /= sum;
 
-	if(controls['Forward'] > 0  && invoker == "forward") {
-		controls['Backward'] = 0;
+		if(controls['Left'] > 0  && invoker == "left") {
+			controls['Right'] = 0;
+		}
+
+		if(controls['Right'] > 0  && invoker == "right") {
+			controls['Left'] = 0;
+		}
+
+		if(controls['Forward'] > 0  && invoker == "forward") {
+			controls['Backward'] = 0;
+		}
+
+		if(controls['Backward'] > 0  && invoker == "backward") {
+			controls['Forward'] = 0;
+		}
+
+
+
+		//controls['run'] /= sum;
+
+		var weightEvent = new CustomEvent( 'weight-animation', getAnimationData() );
+		window.dispatchEvent(weightEvent);
+	};
+
+	controls.crossfade = function( from, to ) {
+
+		var fadeData = getAnimationData();
+		fadeData.detail.from = from;
+		fadeData.detail.to = to;
+		fadeData.detail.time = controls[ "Crossfade Time" ];
+
+		window.dispatchEvent( new CustomEvent( 'crossfade', fadeData ) );
 	}
 
-	if(controls['Backward'] > 0  && invoker == "backward") {
-		controls['Forward'] = 0;
+	controls.warp = function( from, to ) {
+
+		var warpData = getAnimationData();
+		warpData.detail.from = 'walk';
+		warpData.detail.to = 'run';
+		warpData.detail.time = controls[ "Crossfade Time" ];
+
+		window.dispatchEvent( new CustomEvent( 'warp', warpData ) );
 	}
-
-
-
-	//controls['run'] /= sum;
-
-	var weightEvent = new CustomEvent( 'weight-animation', getAnimationData() );
-	window.dispatchEvent(weightEvent);
-};
-
-controls.crossfade = function( from, to ) {
-
-	var fadeData = getAnimationData();
-	fadeData.detail.from = from;
-	fadeData.detail.to = to;
-	fadeData.detail.time = controls[ "Crossfade Time" ];
-
-	window.dispatchEvent( new CustomEvent( 'crossfade', fadeData ) );
-}
-
-controls.warp = function( from, to ) {
-
-	var warpData = getAnimationData();
-	warpData.detail.from = 'walk';
-	warpData.detail.to = 'run';
-	warpData.detail.time = controls[ "Crossfade Time" ];
-
-	window.dispatchEvent( new CustomEvent( 'warp', warpData ) );
-}
 
 //controls['idle to walk'] = function() {
 //
@@ -192,41 +211,46 @@ controls.warp = function( from, to ) {
 //
 //};
 
-controls.lockCameraChanged = function() {
+	controls.lockCameraChanged = function() {
 
-	var data = {
-		detail: {
-			shouldLock: controls['Lock Camera']
+		var data = {
+			detail: {
+				shouldLock: controls['Lock Camera']
+			}
 		}
+
+		window.dispatchEvent( new CustomEvent( 'toggle-lock-camera', data ) );
 	}
 
-	window.dispatchEvent( new CustomEvent( 'toggle-lock-camera', data ) );
-}
+	controls.showSkeletonChanged = function() {
 
-controls.showSkeletonChanged = function() {
-
-	var data = {
-		detail: {
-			shouldShow: controls['Show Skeleton']
+		var data = {
+			detail: {
+				shouldShow: controls['Show Skeleton']
+			}
 		}
+
+		window.dispatchEvent( new CustomEvent( 'toggle-show-skeleton', data ) );
 	}
 
-	window.dispatchEvent( new CustomEvent( 'toggle-show-skeleton', data ) );
-}
 
+	controls.showModelChanged = function() {
 
-controls.showModelChanged = function() {
-
-	var data = {
-		detail: {
-			shouldShow: controls['Show Model']
+		var data = {
+			detail: {
+				shouldShow: controls['Show Model']
+			}
 		}
+
+		window.dispatchEvent( new CustomEvent( 'toggle-show-model', data ) );
 	}
 
-	window.dispatchEvent( new CustomEvent( 'toggle-show-model', data ) );
-}
+	deviceControllerChanged = function() {
+		deviceControllerActivated = controls["Device Controller"];
+	}
 
 
-init.call(this);
+
+	init.call(this);
 
 }

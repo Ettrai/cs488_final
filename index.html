@@ -39,6 +39,9 @@
 		<script src="js/BlendCharacter.js"></script>
 		<script src="js/BlendCharacterGui.js"></script>
 		<script src="libs/dat.gui.min.js"></script>
+		<script src="js/DeviceController.js"></script>
+		<script src="libs/D3.js"></script>
+
 
 		<script>
 
@@ -64,8 +67,12 @@
 				scene.add ( new THREE.AmbientLight( 0xaaaaaa ) );
 
 				var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
-				light.position.set( 0, 0, 1000 );
+				light.position.set( 0, 0, -1000 );
 				scene.add( light );
+
+				var light2 = new THREE.DirectionalLight( 0xffffff, 1.5 );
+				light.position.set( 0, 0, 1000 );
+				scene.add( light2 );
 
 				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: false } );
 				renderer.setClearColor( '#777777', 1 );
@@ -227,8 +234,8 @@
 
 				// Set default weights
 
-				blendMesh.animations[ 'Left' ].weight = 1 / 2;
-				blendMesh.animations[ 'Right' ].weight = 1 / 2;
+				blendMesh.animations[ 'Left' ].weight = 0;
+				blendMesh.animations[ 'Right' ].weight = 0;
 				blendMesh.animations[ 'Walk' ].weight = 1;
 				blendMesh.animations[ 'Inverse_Walk' ].weight = 0;
 
