@@ -1,0 +1,21 @@
+			"materials" : [
+				{
+					"DbgColor": 15658734,
+					"DbgIndex": 0,
+					"DbgName": "Homer",
+					"blending": "NormalBlending",
+					"colorAmbient": [0.5364704212020399, 0.5364704212020399, 0.5364704212020399],
+					"colorDiffuse": [0.5364704212020399, 0.5364704212020399, 0.5364704212020399],
+					"colorEmissive": [0.0, 0.0, 0.0],
+					"colorSpecular": [0.19372500479221344, 0.19372500479221344, 0.19372500479221344],
+					"depthTest": true,
+					"depthWrite": true,
+					"mapDiffuse": "texture.jpg",
+					"mapDiffuseWrap": ["repeat", "repeat"],
+					"shading": "Lambert",
+					"specularCoef": 9,
+					"transparency": 0.0,
+					"transparent": true,
+					"vertexColors": false
+				}
+			]
