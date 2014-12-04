@@ -4,26 +4,91 @@
     </head>
 
     <body>
-        <p id="x">X Value : <span id="xValue">Nothing</span></p>
-        <p id="y">Y Value : <span id="yValue">Nothing</span></p>
-        <p id="z">Z Value : <span id="zValue">Nothing</span></p>
+        <p>X Value : <span id="xValue">Nothing</span></p>
+        <p>Y Value : <span id="yValue">Nothing</span></p>
+        <p>Z Value : <span id="zValue">Nothing</span></p>
+
+        <!--<p>Direction : <span id="dir">Nothing</span></p>-->
+        <p>Walk Intensity : <span id="walk">Nothing</span></p>
+        <p>Tilt Intensity : <span id="tilt">Nothing</span></p>
+
 
     </body>
     <script>
         var data; // a global
+        var deadzone = 0.2;
+        var max = 5.5;
 
-        setInterval(function(){ d3.json("http://10.110.218.199:8080/", function(error, json) {
+        setInterval(function(){ d3.json("http://10.124.213.51:8080/", function(error, json) {
             if (error) return console.warn(error);
             data = json.Values;
 
-            console.log(data.x_value);
+           // console.log(data.x_value);
 
             d3.select("#xValue").text(data.x_value);
             d3.select("#yValue").text(data.y_value);
             d3.select("#zValue").text(data.z_value);
 
+            computeDirection(data);
 
-        }); }, 20);
+
+        }); }, 50);
+
+        computeDirection = function(data){
+        	
+        	var x = clamp(data.x_value, -max , max);
+        	var y = clamp(data.y_value, -max , max);
+        	var z = clamp(data.z_value, -max , max);
+
+        	var walk_intensity = y/max * z/max;
+        	var tilt_intensity = x/max * y/max;
+
+        	d3.select("#walk").text(walk_intensity);
+        	d3.select("#tilt").text(tilt_intensity);
+
+        	/*if(between(x, -deadzone, deadzone) &&  between(z, -deadzone, deadzone)){
+        		d3.select("#dir").text("Still");
+        		return;
+        	}
+         	if(between(x, -deadzone, deadzone) && z>0){
+    		 	d3.select("#dir").text("Forward");
+    		 	return;
+         	}
+        	if(between(x, -deadzone, deadzone) && z<0){
+    		 	d3.select("#dir").text("Backwards");
+    		 	return;
+        	}
+        	if(x>0 && between(z,-deadzone,deadzone)){
+    		 	d3.select("#dir").text("Left");
+    		 	return;
+        	}
+        	if(x<0 && between(z,-deadzone,deadzone)){
+    		 	d3.select("#dir").text("Right");
+    		 	return;
+        	}*/
+
+        }
+
+		between = function(data, min, max) {
+			console.log(data,min,max)
+		  	return data >= min && data <= max;
+		}
+
+		var clamp = function(num, min, max) {
+		    return num < min ? min : (num > max ? max : num);
+		};
+
+         //function processAjaxData(response, urlPath){
+		     //document.getElementById("content").innerHTML = response.html;
+		     //document.title = response.pageTitle;
+		     //window.history.pushState({"html":response.html,"pageTitle":response.pageTitle},"", urlPath);
+		     //window.history.pushState(data, "Title", "www.facebook.com");
+		     //window.history.popState;
+		     //window.history.replace(data, "Title", "www.facebook.com");
+		     //window.location.replace("http://stackoverflow.com");
+
+		    // wind
+		 //}
 
     </script>
 
