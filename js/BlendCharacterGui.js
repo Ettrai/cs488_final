@@ -20,7 +20,7 @@ function BlendCharacterGui(animations) {
 		"Right": 1.0,
 		"Forward": 3.0,
 		"Backward": 1.0,
-		"IP": '1.2.3.4'
+		"IP": '10.151.213.150'
 
 	};
 
