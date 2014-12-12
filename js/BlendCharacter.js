@@ -1,7 +1,3 @@
-/**
- * @author Michael Guerrero / http://realitymeltdown.com
- */
-
 THREE.BlendCharacter = function () {
 
 	this.animations = {};

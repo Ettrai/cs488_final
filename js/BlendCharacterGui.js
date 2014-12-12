@@ -1,6 +1,3 @@
-/**
- * @author Michael Guerrero / http://realitymeltdown.com
- */
 var deviceControllerActivated;
 var controls;
 
