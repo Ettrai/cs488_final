@@ -17,7 +17,7 @@ function BlendCharacterGui(animations) {
 		"Right": 1.0,
 		"Forward": 3.0,
 		"Backward": 1.0,
-		"IP": '10.151.213.150'
+		"IP": '192.168.137.5'
 
 	};
 
@@ -70,7 +70,7 @@ function BlendCharacterGui(animations) {
 		// These controls execute functions
 		playback.add( controls, "start" );
 		playback.add( controls, "pause" );
-		playback.add( controls, "step" );
+		//playback.add( controls, "step" );
 		//playback.add( controls, "idle to walk" );
 		//playback.add( controls, "walk to run" );
 		//playback.add( controls, "warp walk to run" );
@@ -132,12 +132,12 @@ function BlendCharacterGui(animations) {
 
 	};
 
-	controls.step = function() {
-
-		var stepData = { detail: { stepSize: controls['Step Size'] } };
-		window.dispatchEvent( new CustomEvent('step-animation', stepData ));
-
-	};
+	//controls.step = function() {
+    //
+	//	var stepData = { detail: { stepSize: controls['Step Size'] } };
+	//	window.dispatchEvent( new CustomEvent('step-animation', stepData ));
+    //
+	//};
 
 	controls.weight = function(invoker) {
 
@@ -209,7 +209,6 @@ function BlendCharacterGui(animations) {
 //};
 
 	controls.lockCameraChanged = function() {
-
 		var data = {
 			detail: {
 				shouldLock: controls['Lock Camera']
