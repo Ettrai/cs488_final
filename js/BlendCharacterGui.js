@@ -1,9 +1,9 @@
 var deviceControllerActivated;
-var controls;
+var controlli;
+
 
 function BlendCharacterGui(animations) {
-
-	controls = {
+	var controls = {
 
 		gui: null,
 		"Lock Camera": false,
@@ -20,6 +20,8 @@ function BlendCharacterGui(animations) {
 		"IP": '192.168.137.5'
 
 	};
+	controlli = controls;
+
 
 	var animations = animations;
 
