@@ -6,7 +6,7 @@ var tilt_intensity;
 var deviceControllerActivated;
 
 setInterval(function(){
-    d3.json("http://" + controls.IP + ":8080/", function(error, json) {
+    d3.json("http://" + controlli.IP + ":8080/", function(error, json) {
         if(deviceControllerActivated) {
             if (error) return console.warn(error);
             data = json.Values;
@@ -49,11 +49,11 @@ var getAnimationData = function() {
 
     if (walk_intensity > 0.1) {
         controlValues["Forward"] = walk_intensity;
-        controls["Speed"] = 1 + walk_intensity;
+        controlli["Speed"] = 1 + walk_intensity;
     }
     else if (walk_intensity < -0.1) {
         controlValues["Backward"] = -walk_intensity;
-        controls["Speed"] = 1 - walk_intensity;
+        controlli["Speed"] = 1 - walk_intensity;
     }
 
     if (tilt_intensity > 0.1) {
